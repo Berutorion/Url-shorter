@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 
 const shorUrlSchema = new mongoose.Schema({
   name: {
-    type: string,
+    type: String,
     default: null,
   },
   origin: {
-    type: string,
+    type: String,
     required: true,
   },
-  shor: {
-    type: string,
+  short: {
+    type: String,
     max: 5,
   },
 });
