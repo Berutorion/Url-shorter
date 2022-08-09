@@ -1,15 +1,33 @@
+{{#if message}}
+  <div class="alert alert-danger" role="alert">
+    {{message}}
+  </div>
+{{/if}}
+
 {{#if short}}
 
-  <h2>Success! Please use this url</h2>
-  <p>"http://localhost:3000/{{short}}"</p>
+  <h3>Success! Please use this url</h3>
+  <input
+    class="form-control"
+    type="text"
+    value="http://localhost:3000/short/{{short}}"
+    id="input"
+    disabled
+  />
+  <button onclick="copy()" class="btn btn-primary" id="copy">Copy</button>
 
+  <script>
+    function copy(){ let input = document.getElementById("input");
+    navigator.clipboard.writeText(input.value); alert("copy success!!"); }
+  </script>
 {{else}}
-  <form class="input-group mt-3" action="/short/create" method="POST">
+  <form class="input-group mt-3 needs-validation" action="/short" method="POST">
     <input
       class="form-control"
       type="text"
-      name="url"
+      name="origin"
       placeholder="input URL here"
+      required="required"
     />
     <button class="btn btn-primary" type="submit">Shorten</button>
   </form>

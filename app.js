@@ -24,22 +24,42 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.post("/short/create", (req, res) => {
-  const { url } = req.body;
-  const short = generateShort();
-  shortUrl.create({ origin: url, short: short });
-  res.render("index", { short });
+app.post("/short", async (req, res) => {
+  let origin = req.body.origin.trim();
+  console.log(origin);
+  //如果傳入的原始網址資料庫有，就不生成新的短網址
+  const url = await shortUrl.findOne({ origin }).lean();
+  if (url) {
+    res.render("index", { short: url.short });
+  } else {
+    try {
+      const short = generateShort();
+      await shortUrl.create({ origin, short });
+      res.render("index", { short });
+    } catch (err) {
+      console.log(err);
+      res.render("index", { message: "無效的輸入值" });
+    }
+  }
 });
 
-app.get("/:short", (req, res) => {
+app.get("/short/:short", (req, res) => {
   const short = req.params.short;
   ShortUrl.findOne({ short })
     .lean()
     .then((url) => {
       res.redirect(url.origin);
+    })
+    .catch((err) => {
+      cosole.log(err);
     });
 });
 
 app.post("*", (req, res) => {
   res.send("what!!!?", 404);
+});
+
+app.get("/test", (req, res) => {
+  console.log(generateShort());
+  res.send("test");
 });
