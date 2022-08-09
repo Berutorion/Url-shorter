@@ -1,15 +1,11 @@
 const shortUrl = require("../models/ShortUrl");
 //degfine generatePassword function
-function generatePassword(origin) {
+function generatePassword() {
   //define things user might want
   const lowerCaseLetter = "abcdefghijklmnopqrstuvwxyz";
   const upperCaseLetter = lowerCaseLetter.toUpperCase();
   const numbers = "1234567890";
   const length = 5;
-  //check password length
-  if (option.length == "") {
-    return "Please set almost one for password length";
-  }
 
   // create a collection
   let collection = [];
@@ -26,7 +22,7 @@ function generatePassword(origin) {
   for (let i = 0; i < length; i++) {
     shorurl += sample(collection);
   }
-  checkShorUrl(shorurl);
+  return shorurl;
 }
 
 function sample(array) {
@@ -34,7 +30,14 @@ function sample(array) {
 }
 
 function checkShorUrl(shorurl) {
-  shortUrl.find({ short: shorurl });
+  shortUrl.find({ short: shorurl }).then((short) => {
+    //如果短網址為重複的重新生成
+    if (short.length > 0) {
+      generatePassword();
+    } else {
+      return true;
+    }
+  });
 }
 
 module.exports = generatePassword;
