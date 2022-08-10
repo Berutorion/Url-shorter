@@ -1,34 +1,42 @@
-{{#if message}}
-  <div class="alert alert-danger" role="alert">
-    {{message}}
-  </div>
-{{/if}}
+<div class="col-sm-6">
+  {{#if message}}
+    <div class="alert alert-danger" role="alert">
+      {{message}}
+    </div>
+  {{/if}}
 
-{{#if short}}
-
-  <h3>Success! Please use this url</h3>
-  <input
-    class="form-control"
-    type="text"
-    value="http://localhost:3000/short/{{short}}"
-    id="input"
-    disabled
-  />
-  <button onclick="copy()" class="btn btn-primary" id="copy">Copy</button>
-
-  <script>
-    function copy(){ let input = document.getElementById("input");
-    navigator.clipboard.writeText(input.value); alert("copy success!!"); }
-  </script>
-{{else}}
-  <form class="input-group mt-3 needs-validation" action="/short" method="POST">
+  {{#if short}}
+    <!--結果頁面 -->
+    <h3>Success! Please use this url</h3>
     <input
-      class="form-control"
+      class="form-control my-3"
       type="text"
-      name="origin"
-      placeholder="input URL here"
-      required="required"
+      value="http://localhost:3000/short/{{short}}"
+      id="input"
+      disabled
     />
-    <button class="btn btn-primary" type="submit">Shorten</button>
-  </form>
-{{/if}}
+    <button id="copy" class="btn btn-outline-primary" onclick="copy()">
+      Copy
+    </button>
+
+    <script>
+      function copy(){ let input = document.getElementById("input"); let copy =
+      document.getElementById("copy");
+      navigator.clipboard.writeText(input.value); copy.innerText=
+      "Copied";copy.classList.remove("btn-outline-primary");
+      copy.classList.add("btn-primary") } ;
+    </script>
+  {{else}}
+    <!--輸入頁面 -->
+    <form class="mt-3 needs-validation" action="/short" method="POST">
+      <input
+        class="form-control my-3"
+        type="text"
+        name="origin"
+        placeholder="input URL here"
+        required="required"
+      />
+      <button class="btn btn-primary" type="submit">Shorten</button>
+    </form>
+  {{/if}}
+</div>

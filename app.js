@@ -26,7 +26,6 @@ app.get("/", (req, res) => {
 
 app.post("/short", async (req, res) => {
   let origin = req.body.origin.trim();
-  console.log(origin);
   //如果傳入的原始網址資料庫有，就不生成新的短網址
   const url = await shortUrl.findOne({ origin }).lean();
   if (url) {
@@ -38,7 +37,7 @@ app.post("/short", async (req, res) => {
       res.render("index", { short });
     } catch (err) {
       console.log(err);
-      res.render("index", { message: "無效的輸入值" });
+      res.render("index", { message: "無效的輸入值，請重新輸入" });
     }
   }
 });
@@ -51,15 +50,11 @@ app.get("/short/:short", (req, res) => {
       res.redirect(url.origin);
     })
     .catch((err) => {
-      cosole.log(err);
+      console.log(err);
+      res.render("error");
     });
 });
 
 app.post("*", (req, res) => {
-  res.send("what!!!?", 404);
-});
-
-app.get("/test", (req, res) => {
-  console.log(generateShort());
-  res.send("test");
+  res.render("error");
 });
