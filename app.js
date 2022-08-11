@@ -26,6 +26,8 @@ app.get("/", (req, res) => {
 
 app.post("/short", async (req, res) => {
   let origin = req.body.origin.trim();
+  if (!origin.includes("http://") && !origin.includes("https://"))
+    return res.render("index", { message: "網址格式錯誤，請重新輸入" });
   //如果傳入的原始網址資料庫有，就不生成新的短網址
   const url = await shortUrl.findOne({ origin }).lean();
   if (url) {
@@ -36,7 +38,7 @@ app.post("/short", async (req, res) => {
       await shortUrl.create({ origin, short });
       res.render("index", { short });
     } catch (err) {
-      console.log(err);
+      console.log(err, "short-post");
       res.render("index", { message: "無效的輸入值，請重新輸入" });
     }
   }
@@ -50,7 +52,7 @@ app.get("/short/:short", (req, res) => {
       res.redirect(url.origin);
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err, "short-get");
       res.render("error");
     });
 });
