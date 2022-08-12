@@ -44,17 +44,15 @@ app.post("/short", async (req, res) => {
   }
 });
 
-app.get("/short/:short", (req, res) => {
+app.get("/:short", async (req, res) => {
   const short = req.params.short;
-  ShortUrl.findOne({ short })
-    .lean()
-    .then((url) => {
-      res.redirect(url.origin);
-    })
-    .catch((err) => {
-      console.log(err, "short-get");
-      res.render("error");
-    });
+  try {
+    const url = await ShortUrl.findOne({ short }).lean();
+    res.redirect(url.origin);
+  } catch (err) {
+    console.log(err);
+    res.render("error");
+  }
 });
 
 app.post("*", (req, res) => {
